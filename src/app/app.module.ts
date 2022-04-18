@@ -10,10 +10,11 @@ import { RecipesComponent } from './recipes/recipes.component';
 import { AuthComponent } from './auth/auth.component';
 import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 import { HttpClientModule } from '@angular/common/http';
+import { SpinnerComponent } from './spinner/spinner.component';
 
 @NgModule({
   imports:      [ BrowserModule, FormsModule,AppRoutingModule,HttpClientModule ],
-  declarations: [ AppComponent, HelloComponent,HeaderComponent,RecipesComponent,AuthComponent,ShoppingListComponent ],
+  declarations: [ AppComponent, HelloComponent,HeaderComponent,RecipesComponent,AuthComponent,ShoppingListComponent,SpinnerComponent ],
   bootstrap:    [ AppComponent ]
 })
 export class AppModule { }

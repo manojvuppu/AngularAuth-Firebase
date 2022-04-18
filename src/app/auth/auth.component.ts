@@ -14,7 +14,7 @@ export interface User {
 })
 export class AuthComponent implements OnInit {
   isLoginMode: boolean = true;
-
+  error:string;
   user: User = {
     email: '',
     password: '',
@@ -32,9 +32,12 @@ export class AuthComponent implements OnInit {
     const password = form.value.password;
     if (this.isLoginMode) {
     } else {
-      this.authService
-        .signUp(email, password)
-        .subscribe((resp) => console.log(resp));
+      this.authService.signUp(email, password).subscribe({
+        next: (res) => console.log(res),
+        error: (error) => {
+          console.log(error);
+        },
+      });
       form.reset();
     }
   }
