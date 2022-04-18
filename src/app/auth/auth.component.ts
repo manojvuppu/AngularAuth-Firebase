@@ -14,11 +14,12 @@ export interface User {
 })
 export class AuthComponent implements OnInit {
   isLoginMode: boolean = true;
-  error:string;
+  errorText: string;
   user: User = {
     email: '',
     password: '',
   };
+  isLoading: boolean = false;
 
   constructor(private authService: AuthService) {}
 
@@ -28,15 +29,19 @@ export class AuthComponent implements OnInit {
     if (!form.valid) {
       return;
     }
+    this.isLoading = true;
     const email = form.value.email;
     const password = form.value.password;
     if (this.isLoginMode) {
+      this.authService.login(email, password).subscribe({
+        next: (res) => (this.isLoading = false),
+        error: (err)=> {this.errorText = err;this.isLoading = false}
+      });
+      form.reset();
     } else {
       this.authService.signUp(email, password).subscribe({
-        next: (res) => console.log(res),
-        error: (error) => {
-          console.log(error);
-        },
+        next: (res) => (this.isLoading = false),
+        error: (err)=> {this.errorText = err;this.isLoading = false}
       });
       form.reset();
     }
