@@ -1,4 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
+
+
+export interface User {
+  email: string;
+  password: string;
+}
 
 @Component({
   selector: 'app-auth',
@@ -7,9 +14,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AuthComponent implements OnInit {
 
-  constructor() { }
+  user: User = {
+    email: '',
+    password: '',
+  };
 
-  ngOnInit() {
+
+  constructor() {}
+
+  ngOnInit() {}
+
+
+  onSubmit(form:NgForm){
+    console.log(form.value);
+    form.reset();
   }
+
 
 }
