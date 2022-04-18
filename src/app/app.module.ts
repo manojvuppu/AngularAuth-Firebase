@@ -4,10 +4,15 @@ import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { HelloComponent } from './hello.component';
+import { HeaderComponent } from './header/header.component';
+import { AppRoutingModule } from './app-routing.modules';
+import { RecipesComponent } from './recipes/recipes.component';
+import { AuthComponent } from './auth/auth.component';
+import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 
 @NgModule({
-  imports:      [ BrowserModule, FormsModule ],
-  declarations: [ AppComponent, HelloComponent ],
+  imports:      [ BrowserModule, FormsModule,AppRoutingModule ],
+  declarations: [ AppComponent, HelloComponent,HeaderComponent,RecipesComponent,AuthComponent,ShoppingListComponent ],
   bootstrap:    [ AppComponent ]
 })
 export class AppModule { }
