@@ -33,15 +33,11 @@
             class="btn btn-primary"
             [disabled]="!userForm.valid"
           >
-            SignUp
+            {{ isLoginMode ? 'SignUp' : 'SignIn' }}
           </button>
           |
-          <button
-            type="submit"
-            class="btn btn-primary"
-            [disabled]="!userForm.valid"
-          >
-            Switch To Login
+          <button type="button" class="btn btn-primary" (click)="switchMode()">
+            {{ isLoginMode ? 'Switch To Login' : 'Switch To SignUp' }}
           </button>
         </div>
       </form>
