@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
+import { map, take, tap } from 'rxjs/operators';
 import { AuthResponseData, AuthService } from './auth.service';
 import { User } from './user.model';
 
@@ -26,7 +27,21 @@ export class AuthComponent implements OnInit {
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.checkLoggedIn();
+  }
+  checkLoggedIn() {
+    this.authService.user.pipe(
+       take(1),
+      map((user) => {
+        console.log(user);
+        const isAuth = !!user;
+        if (isAuth) {
+          this.router.navigate(['/recipes']);
+        }
+      })
+    ).subscribe();
+  }
 
   onSubmit(form: NgForm) {
     if (!form.valid) {
