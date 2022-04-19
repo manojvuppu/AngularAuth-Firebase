@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { AuthService } from './auth.service';
+import { Router } from '@angular/router';
+import { Observable, Subject } from 'rxjs';
+import { AuthResponseData, AuthService } from './auth.service';
+import { User } from './user.model';
 
-export interface User {
-  email: string;
-  password: string;
-}
+// export interface User {
+//   email: string;
+//   password: string;
+// }
 
 @Component({
   selector: 'app-auth',
@@ -15,13 +18,13 @@ export interface User {
 export class AuthComponent implements OnInit {
   isLoginMode: boolean = true;
   errorText: string;
-  user: User = {
-    email: '',
-    password: '',
-  };
+  // user: User = {
+  email: '';
+  password: '';
+  // };
   isLoading: boolean = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {}
 
@@ -32,19 +35,24 @@ export class AuthComponent implements OnInit {
     this.isLoading = true;
     const email = form.value.email;
     const password = form.value.password;
+    let authObs: Observable<AuthResponseData>;
     if (this.isLoginMode) {
-      this.authService.login(email, password).subscribe({
-        next: (res) => (this.isLoading = false),
-        error: (err)=> {this.errorText = err;this.isLoading = false}
-      });
-      form.reset();
+      authObs = this.authService.login(email, password);
     } else {
-      this.authService.signUp(email, password).subscribe({
-        next: (res) => (this.isLoading = false),
-        error: (err)=> {this.errorText = err;this.isLoading = false}
-      });
-      form.reset();
+      authObs = this.authService.signUp(email, password);
     }
+    authObs.subscribe({
+      next: (res) => {
+        console.log(res);
+        this.isLoading = false;
+        this.router.navigate(['/recipes']);
+      },
+      error: (err) => {
+        this.errorText = err;
+        this.isLoading = false;
+      },
+    });
+    form.reset();
   }
 
   switchMode() {

@@ -15,13 +15,17 @@
   <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
       <li class="nav-item active">
-        <a class="nav-link" [routerLink]="['/recipes']">Home</a>
+        <a class="nav-link" [routerLink]="['/recipes']" *ngIf="isLoggedIn"
+          >Recipes</a
+        >
       </li>
       <li class="nav-item">
-        <a class="nav-link" [routerLink]="['/login']">Login</a>
+        <a class="nav-link" [routerLink]="['/login']" *ngIf="!isLoggedIn"
+          >Login</a
+        >
       </li>
       <li class="nav-item">
-        <a class="nav-link" [routerLink]="['/']">Logout</a>
+        <a class="nav-link" [routerLink]="['/']" *ngIf="isLoggedIn">Logout</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" [routerLink]="['/shopping-list']">ShoppingList</a>
