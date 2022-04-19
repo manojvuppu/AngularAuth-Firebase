@@ -1,5 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subject, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { User } from './user.model';
@@ -9,8 +10,9 @@ import { User } from './user.model';
 })
 export class AuthService {
   user = new BehaviorSubject<User>(null);
+  private tokenExpirationTime: any;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   signUp(email: string, password: string) {
     return this.http
@@ -55,8 +57,52 @@ export class AuthService {
     expiresIn: number
   ) {
     const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
-    const user = new User(email,localId,idToken,expirationDate);
+    const user = new User(email, localId, idToken, expirationDate);
+    localStorage.setItem('userData', JSON.stringify(user));
     this.user.next(user);
+    this.autoLogout(expiresIn * 1000);
+  }
+
+  logout() {
+    this.user.next(null);
+    this.router.navigate(['/login']);
+    localStorage.clear();
+    if (this.tokenExpirationTime) {
+      clearTimeout(this.tokenExpirationTime);
+    }
+    this.tokenExpirationTime = null;
+  }
+
+  autoLogin() {
+    const user: {
+      email: string;
+      id: string;
+      tokenExpirationDate: string;
+      _token: string;
+    } = JSON.parse(localStorage.getItem('userData'));
+    if (!user) {
+      return;
+    }
+    const loadedUser = new User(
+      user.email,
+      user.id,
+      user._token,
+      new Date(user.tokenExpirationDate)
+    );
+    if (loadedUser.token) {
+      this.user.next(loadedUser);
+      const expirationDuration =
+        new Date(user.tokenExpirationDate).getTime() - new Date().getTime();
+
+      this.autoLogout(expirationDuration);
+    }
+  }
+
+  autoLogout(expirationTime: number) {
+    console.log(expirationTime);
+    this.tokenExpirationTime = setTimeout(() => {
+      this.logout();
+    }, expirationTime);
   }
 
   private handleError(errorResp: HttpErrorResponse): Observable<never> {
