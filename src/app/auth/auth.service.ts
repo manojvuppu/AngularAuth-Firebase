@@ -55,7 +55,7 @@ export class AuthService {
     expiresIn: number
   ) {
     const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
-    const user = new User(email, idToken, localId, expirationDate);
+    const user = new User(email,localId,idToken,expirationDate);
     this.user.next(user);
   }
 
